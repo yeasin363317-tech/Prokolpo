@@ -25,3 +25,7 @@ export function downloadCsv(name: string, rows: any[][]) {
   a.download = name;
   a.click();
 }
+export const greeting = () => {
+  const h = new Date().getHours();
+  return h < 5 ? 'শুভ রাত্রি' : h < 12 ? 'শুভ সকাল' : h < 16 ? 'শুভ দুপুর' : h < 18 ? 'শুভ বিকাল' : h < 20 ? 'শুভ সন্ধ্যা' : 'শুভ রাত্রি';
+};

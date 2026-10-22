@@ -2,7 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { Download } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { dt, downloadCsv, errMsg, monthKey, monthLabel, taka, today } from '../lib/format';
-import { Btn, Card, Empty, ErrorBox, Field, inputCls, Msg, Spinner, useAction } from '../ui';
+import { catStyle } from '../lib/cat';
+import { Btn, Card, Empty, ErrorBox, Field, inputCls, Msg, Spinner, Stat, useAction } from '../ui';
+import { Wallet, TrendingDown, Scale } from 'lucide-react';
 
 const VIEWS = [
   ['monthly', 'মাসিক জমা'], ['member', 'সদস্যভিত্তিক জমা'], ['expenses', 'খরচের তালিকা'],
@@ -126,10 +128,30 @@ export default function Reports({ members }: any) {
         <div className="grid grid-cols-2 gap-2">
           {VIEWS.map(([id, label]) => (
             <button key={id} onClick={() => setView(id)} aria-pressed={view === id}
-              className={`min-h-[48px] rounded-xl border font-semibold ${view === id ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-blue-700 border-blue-200'}`}>{label}</button>
+              className={`min-h-[48px] rounded-2xl border font-semibold transition ${view === id ? 'bg-gradient-to-b from-blue-500 to-blue-700 text-white border-blue-600' : 'bg-white/80 text-blue-800 border-blue-200'}`}>{label}</button>
           ))}
         </div>
       </Card>
+      <div className="grid sm:grid-cols-3 gap-3">
+        <Stat label="এই সময়ে জমা" value={taka(sum(dep))} tone="green" icon={Wallet} />
+        <Stat label="এই সময়ে খরচ" value={taka(sum(exp))} tone="red" icon={TrendingDown} />
+        <Stat label="জমা − খরচ" value={taka(sum(dep) - sum(exp))} tone="blue" icon={Scale} />
+      </div>
+      {view === 'expenses' || view === 'monthlyexp' ? (
+        <Card className="space-y-3">
+          <h2 className="text-lg font-bold">খাত অনুযায়ী খরচ</h2>
+          {(() => {
+            const g: any[] = group(exp, (t) => t.expense_category_id).sort((a: any, b: any) => b[1] - a[1]);
+            const mx = g.length ? g[0][1] : 1;
+            return g.length === 0 ? <Empty text="এই সময়ে কোনো খরচ নেই।" /> : g.map(([id, v]: any, i: number) => (
+              <div key={id}>
+                <div className="flex justify-between gap-2"><span className="font-medium">{cats[id]}</span><span className="font-semibold nums">{taka(v)}</span></div>
+                <div className="h-2.5 rounded-full bg-slate-200/70 mt-1 overflow-hidden"><div className={`h-full rounded-full ${catStyle(cats[id], i).bar}`} style={{ width: `${Math.max(4, (v / mx) * 100)}%` }} /></div>
+              </div>
+            ));
+          })()}
+        </Card>
+      ) : null}
       <Msg m={act.msg} />
       <Card>
         <Table head={head} rows={rows} total={total} />

@@ -1,7 +1,40 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body { font-family: 'Noto Sans Bengali', system-ui, sans-serif; font-size: 18px; background: #f5f8ff; color: #0f172a; margin: 0; }
+
+:root { --font: 'Hind Siliguri', 'Noto Sans Bengali', sans-serif; }
+html, body { font-family: var(--font); }
+body { margin: 0; font-size: 17px; line-height: 1.65; color: #0b1b3f; background: #dfe9fb; -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { line-height: 1.35; letter-spacing: 0; }
+input, select, textarea, button { font-family: var(--font); font-size: 17px; }
 :focus-visible { outline: 3px solid #2563eb; outline-offset: 2px; }
-input, select, textarea { font-size: 18px; }
+
+.app-bg {
+  min-height: 100vh;
+  background:
+    radial-gradient(55% 40% at 10% 0%, rgba(147,186,255,.75) 0%, transparent 65%),
+    radial-gradient(45% 40% at 100% 15%, rgba(196,181,253,.55) 0%, transparent 60%),
+    radial-gradient(50% 40% at 70% 100%, rgba(125,211,252,.45) 0%, transparent 60%),
+    linear-gradient(180deg, #eef4ff 0%, #e2ebfb 100%);
+}
+.glass {
+  background: rgba(255,255,255,.72);
+  border: 1px solid rgba(255,255,255,.9);
+  box-shadow: 0 10px 34px rgba(30,64,175,.10), inset 0 1px 0 rgba(255,255,255,.8);
+  -webkit-backdrop-filter: blur(16px) saturate(150%);
+  backdrop-filter: blur(16px) saturate(150%);
+}
+.glass-dark {
+  background: rgba(15,35,85,.55);
+  border: 1px solid rgba(255,255,255,.18);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: rgba(255,255,255,.96); }
+  .glass-dark { background: rgba(15,35,85,.92); }
+}
+.nums { font-variant-numeric: tabular-nums; }
+.card-hover { transition: transform .18s ease, box-shadow .18s ease; }
+.card-hover:hover { transform: translateY(-2px); box-shadow: 0 14px 38px rgba(30,64,175,.16); }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

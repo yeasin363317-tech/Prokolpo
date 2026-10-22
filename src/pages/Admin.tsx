@@ -1,17 +1,19 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { errMsg, taka, dt } from '../lib/format';
-import { Btn, Card, Empty, ErrorBox, Field, inputCls, Msg, Spinner, Stat, useAction } from '../ui';
+import { Users, Wallet, TrendingDown, Scale } from 'lucide-react';
+import { Btn, Card, Empty, ErrorBox, Field, inputCls, Msg, PageHeader, Spinner, Stat, useAction } from '../ui';
 import { DepositForm, ExpenseForm } from './AdminForms';
 import Reports from './AdminReports';
 import TxRow from './TxRow';
 
 const SECTIONS = [
-  ['members', 'সদস্য'], ['deposit', 'জমা নিন'], ['expense', 'খরচ লিখুন'], ['reports', 'রিপোর্ট'],
+  ['members', 'সদস্য'], ['deposit', 'নতুন জমা'], ['expense', 'নতুন খরচ'], ['reports', 'রিপোর্ট'],
 ];
 
-export default function Admin() {
-  const [sec, setSec] = useState('members');
+export default function Admin({ initial = 'members' }: any) {
+  const [sec, setSec] = useState(initial);
+  useEffect(() => setSec(initial), [initial]);
   const [members, setMembers] = useState<any[] | null>(null);
   const [ps, setPs] = useState<any>(null);
   const [err, setErr] = useState('');
@@ -29,17 +31,17 @@ export default function Admin() {
 
   return (
     <>
-      <h1 className="text-2xl font-bold">ব্যবস্থাপনা</h1>
-      <div className="grid grid-cols-2 gap-3">
-        <Stat label="মোট সদস্য" value={String(ps.member_count)} tone="blue" />
-        <Stat label="সবার মোট জমা" value={taka(ps.total_contributions)} tone="green" />
-        <Stat label="মোট খরচ" value={taka(ps.total_expenses)} tone="red" />
-        <Stat label="হিসাব অনুযায়ী অবশিষ্ট" value={taka(ps.recorded_balance)} tone="blue" />
+      <PageHeader title="ব্যবস্থাপনা" sub="সদস্য, জমা, খরচ ও রিপোর্ট এখান থেকে সামলান।" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <Stat label="মোট সদস্য" value={String(ps.member_count)} tone="violet" icon={Users} />
+        <Stat label="মোট জমা" value={taka(ps.total_contributions)} tone="green" icon={Wallet} />
+        <Stat label="মোট খরচ" value={taka(ps.total_expenses)} tone="red" icon={TrendingDown} />
+        <Stat label="হিসাব অনুযায়ী অবশিষ্ট" value={taka(ps.recorded_balance)} tone="blue" icon={Scale} />
       </div>
       <div className="grid grid-cols-4 gap-2" role="tablist">
         {SECTIONS.map(([id, label]) => (
           <button key={id} role="tab" aria-selected={sec === id} onClick={() => setSec(id)}
-            className={`min-h-[52px] rounded-xl text-sm sm:text-base font-semibold border ${sec === id ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-blue-700 border-blue-200'}`}>
+            className={`min-h-[52px] rounded-2xl text-sm sm:text-base font-semibold border transition ${sec === id ? 'bg-gradient-to-b from-blue-500 to-blue-700 text-white border-blue-600 shadow-md' : 'bg-white/80 text-blue-800 border-blue-200'}`}>
             {label}
           </button>
         ))}

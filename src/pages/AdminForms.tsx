@@ -34,7 +34,7 @@ export function DepositForm({ members, onSaved }: any) {
   return (
     <Card>
       <form onSubmit={submit} className="space-y-3">
-        <h2 className="text-lg font-bold">জমা নিন</h2>
+        <h2 className="text-xl font-bold">নতুন জমা যোগ করুন</h2>
         <Field label="সদস্য">
           <select className={inputCls} value={f.member} onChange={set('member')}>
             <option value="">— সদস্য বেছে নিন —</option>
@@ -118,7 +118,7 @@ export function ExpenseForm({ onSaved }: any) {
     <>
       <Card>
         <form onSubmit={submit} className="space-y-3">
-          <h2 className="text-lg font-bold">খরচ লিখুন</h2>
+          <h2 className="text-xl font-bold">নতুন খরচ যোগ করুন</h2>
           <Field label="খরচের খাত">
             <select className={inputCls} value={f.cat} onChange={set('cat')}>
               <option value="">— খাত বেছে নিন —</option>

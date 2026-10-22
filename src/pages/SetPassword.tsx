@@ -20,7 +20,7 @@ export default function SetPassword({ onDone, title = 'নতুন পাসও
     });
   };
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="app-bg min-h-screen flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <form onSubmit={submit} className="space-y-4">
           <h2 className="text-xl font-bold">{title}</h2>
