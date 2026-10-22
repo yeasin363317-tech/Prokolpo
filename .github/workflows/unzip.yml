@@ -1,0 +1,39 @@
+name: Unzip project
+
+on:
+  push:
+    paths:
+      - 'prokolpo.zip'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check zip exists
+        run: |
+          if [ ! -f prokolpo.zip ]; then
+            echo "prokolpo.zip পাওয়া যায়নি"
+            exit 1
+          fi
+
+      - name: Unzip and move files to root
+        run: |
+          unzip -q prokolpo.zip -d _tmp
+          shopt -s dotglob
+          cp -r _tmp/prokolpo/* .
+          rm -rf _tmp prokolpo.zip
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Unzip Prokolpo project" || echo "কিছু বদলায়নি"
+          git push
