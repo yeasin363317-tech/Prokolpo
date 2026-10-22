@@ -38,23 +38,3 @@ input, select, textarea, button { font-family: var(--font); font-size: 17px; }
 .card-hover { transition: transform .18s ease, box-shadow .18s ease; }
 .card-hover:hover { transform: translateY(-2px); box-shadow: 0 14px 38px rgba(30,64,175,.16); }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
-
-/* Login page background (full image, not cropped) */
-.login-bg {
-  min-height: 100vh;
-  min-height: 100svh;
-  background: #0d2a63 url('/login-bg.webp') 8% center / cover no-repeat;
-}
-@media (min-width: 1024px) { .login-bg { background-position: center; } }
-.login-card {
-  background: rgba(255,255,255,.74);
-  border: 1px solid rgba(255,255,255,.75);
-  box-shadow: 0 24px 70px rgba(10,30,80,.35), inset 0 1px 0 rgba(255,255,255,.9);
-  -webkit-backdrop-filter: blur(22px) saturate(160%);
-  backdrop-filter: blur(22px) saturate(160%);
-}
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .login-card { background: rgba(255,255,255,.94); }
-}
-
-@media (min-width: 1024px) { .login-card { background: rgba(255,255,255,.58); } }
