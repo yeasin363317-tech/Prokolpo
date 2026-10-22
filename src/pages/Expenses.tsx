@@ -5,6 +5,7 @@ import { dt, errMsg, taka } from '../lib/format';
 import { catStyle } from '../lib/cat';
 import { Btn, Card, Empty, ErrorBox, inputCls, Modal, PageHeader, Spinner, Stat } from '../ui';
 import { ReceiptLink } from './TxRow';
+import TxActions from './TxActions';
 
 export default function Expenses({ isAdmin, go }: any) {
   const [rows, setRows] = useState<any[] | null>(null);
@@ -17,6 +18,7 @@ export default function Expenses({ isAdmin, go }: any) {
   const [to, setTo] = useState('');
   const [sel, setSel] = useState<any>(null);
 
+  const [tick, setTick] = useState(0);
   useEffect(() => {
     (async () => {
       const [r, c, s] = await Promise.all([
@@ -27,7 +29,7 @@ export default function Expenses({ isAdmin, go }: any) {
       if (r.error || c.error || s.error) return setErr(errMsg(r.error || c.error || s.error));
       setRows(r.data); setCats(c.data); setPs(s.data[0]);
     })();
-  }, []);
+  }, [tick]);
 
   const idx = useMemo(() => Object.fromEntries(cats.map((c, i) => [c.id, i])), [cats]);
   const name = useMemo(() => Object.fromEntries(cats.map((c) => [c.id, c.name])), [cats]);
@@ -126,6 +128,7 @@ export default function Expenses({ isAdmin, go }: any) {
               <div key={k as string} className="flex justify-between gap-4 border-b border-slate-100 pb-2"><span className="text-slate-600">{k}</span><span className="font-semibold text-right">{v}</span></div>
             ))}
             {sel.receipt_path && <ReceiptLink path={sel.receipt_path} />}
+            {isAdmin && <TxActions t={sel} onChanged={() => { setSel(null); setTick((n) => n + 1); }} />}
           </div>
         )}
       </Modal>

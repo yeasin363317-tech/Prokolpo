@@ -20,7 +20,7 @@ export function ReceiptLink({ path }: { path: string }) {
   );
 }
 
-export default function TxRow({ t, kind, title }: { t: any; kind: 'in' | 'out'; title: string }) {
+export default function TxRow({ t, kind, title, actions }: { t: any; kind: 'in' | 'out'; title: string; actions?: any }) {
   const out = kind === 'out';
   return (
     <li className={`flex items-center gap-3 py-3 border-b border-slate-200/70 last:border-0 ${t.is_reversed ? 'opacity-60' : ''}`}>
@@ -36,6 +36,7 @@ export default function TxRow({ t, kind, title }: { t: any; kind: 'in' | 'out'; 
         {t.receipt_ref && <div className="text-sm text-slate-600">রসিদ নং: {t.receipt_ref}</div>}
         {t.receipt_path && <ReceiptLink path={t.receipt_path} />}
         {t.is_reversed && <div className="text-sm font-semibold text-orange-700">✖ বাতিল করা হয়েছে</div>}
+        {actions}
       </div>
       <div className={`font-bold nums whitespace-nowrap ${out ? 'text-rose-700' : 'text-emerald-700'}`}>
         {out ? '− ' : '+ '}{taka(t.amount)}

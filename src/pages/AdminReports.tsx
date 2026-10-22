@@ -3,6 +3,7 @@ import { Download } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { dt, downloadCsv, errMsg, monthKey, monthLabel, taka, today } from '../lib/format';
 import { catStyle } from '../lib/cat';
+import TxActions from './TxActions';
 import { Btn, Card, Empty, ErrorBox, Field, inputCls, Msg, Spinner, Stat, useAction } from '../ui';
 import { Wallet, TrendingDown, Scale } from 'lucide-react';
 
@@ -95,27 +96,13 @@ export default function Reports({ members }: any) {
     head = ['সদস্য', 'নির্ধারিত বকেয়া', 'মোট জমা', 'এখনো বাকি']; file = 'dues';
     csv = dues.map((d: any) => [name[d[0]] ?? d[0], d[1], d[2], d[3]]); rows = dues.map((d: any) => [name[d[0]] ?? 'অজানা', taka(d[1]), taka(d[2]), taka(d[3])]);
   } else {
-    head = ['তারিখ', 'ধরন', 'টাকা', 'বিবরণ', '']; file = 'all-transactions';
+    head = ['তারিখ', 'ধরন', 'টাকা', 'বিবরণ', 'কাজ']; file = 'all-transactions';
     const L: any = { contribution: 'জমা', expense: 'খরচ', other_income: 'অন্যান্য আয়', reversal: 'বাতিল এন্ট্রি' };
     const list = tx.filter((t) => inRange(t.transaction_date));
     csv = list.map((t) => [t.transaction_date, L[t.transaction_type], t.amount, t.description, t.is_reversed ? 'বাতিল' : '']);
     rows = list.map((t) => [dt(t.transaction_date), `${L[t.transaction_type]}${t.member_id ? ' – ' + (name[t.member_id] ?? '') : ''}${t.expense_category_id ? ' – ' + cats[t.expense_category_id] : ''}`,
       <span className={t.is_reversed ? 'line-through' : ''}>{taka(t.amount)}</span>, t.description ?? '',
-      t.transaction_type !== 'reversal' && !t.is_reversed
-        ? <button className="text-red-700 underline whitespace-nowrap" onClick={() => reverse(t)}>সংশোধন</button>
-        : <span className="text-orange-700">{t.is_reversed ? 'বাতিল' : ''}</span>]);
-  }
-
-  function reverse(t: any) {
-    const reason = prompt('কেন বাতিল করবেন? কারণ লিখুন (যেমন: ভুল টাকা লেখা হয়েছে)');
-    if (!reason || reason.trim().length < 3) return;
-    if (!confirm(`${taka(t.amount)}-এর এই লেনদেন বাতিল করবেন? মূল রেকর্ড থেকে যাবে, শুধু হিসাব থেকে বাদ যাবে।`)) return;
-    act.run(async () => {
-      const { error } = await supabase.rpc('reverse_transaction', { p_tx: t.id, p_reason: reason.trim(), p_key: crypto.randomUUID() });
-      if (error) throw error;
-      await load();
-      return 'লেনদেন বাতিল করা হয়েছে।';
-    });
+      <TxActions t={t} members={members} onChanged={load} />]);
   }
 
   return (

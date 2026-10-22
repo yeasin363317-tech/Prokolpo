@@ -6,6 +6,7 @@ import { Btn, Card, Empty, ErrorBox, Field, inputCls, Msg, PageHeader, Spinner, 
 import { DepositForm, ExpenseForm } from './AdminForms';
 import Reports from './AdminReports';
 import TxRow from './TxRow';
+import TxActions from './TxActions';
 
 const SECTIONS = [
   ['members', 'সদস্য'], ['deposit', 'নতুন জমা'], ['expense', 'নতুন খরচ'], ['reports', 'রিপোর্ট'],
@@ -144,7 +145,7 @@ function Members({ members, reload }: any) {
             <button className="text-blue-700 underline" onClick={() => setView(null)}>বন্ধ করুন</button>
           </div>
           {!stmt ? <Spinner /> : stmt.length === 0 ? <Empty text="কোনো জমা নেই।" /> : (
-            <ul>{stmt.map((t) => <TxRow key={t.id} t={t} kind="in" title="জমা" />)}</ul>
+            <ul>{stmt.map((t) => <TxRow key={t.id} t={t} kind="in" title="জমা" actions={<TxActions t={t} members={members} onChanged={() => { openStmt(view); reload(); }} />} />)}</ul>
           )}
         </Card>
       )}
